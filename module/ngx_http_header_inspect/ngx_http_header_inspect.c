@@ -12,16 +12,15 @@
 #include <ngx_regex.h>
 
 #define MODULE_VERSION "0.2"
-#define TOKEN_NAME "token-api"
 
 typedef struct {
     ngx_flag_t inspect;
     ngx_flag_t log;
     ngx_flag_t log_uninspected;
     ngx_flag_t block;
-
-
     ngx_uint_t range_max_byteranges;
+    ngx_str_t token_name;
+    ngx_str_t regex_pattern;
 } ngx_header_inspect_loc_conf_t;
 
 
@@ -76,6 +75,22 @@ static ngx_command_t ngx_header_inspect_commands[] = {
                 offsetof(ngx_header_inspect_loc_conf_t, range_max_byteranges),
                 NULL
         },
+        {
+                ngx_string("inspect_headers_token_name"),
+                NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
+                ngx_conf_set_str_slot,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_header_inspect_loc_conf_t, token_name),
+                NULL
+        },
+        {
+                ngx_string("inspect_headers_regex_pattern"),
+                NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
+                ngx_conf_set_str_slot,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_header_inspect_loc_conf_t, regex_pattern),
+                NULL
+        },
         ngx_null_command
 };
 
@@ -122,15 +137,16 @@ static ngx_int_t ngx_header_inspect_init(ngx_conf_t *cf) {
     return NGX_OK;
 }
 
-static ngx_uint_t check_token_pattern(ngx_http_request_t *r, ngx_str_t *pattern) {
+static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, ngx_str_t *pattern) {
 
     ngx_regex_t *re;
     ngx_regex_compile_t rc;
 
     u_char errstr[NGX_MAX_CONF_ERRSTR];
-    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incomming string %s", pattern->data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s", pattern->data);
 
-    ngx_str_t value = ngx_string("(\\d\\d\\d\\d\\d\\d)");
+    //ngx_str_t value = ngx_string("(\\d\\d\\d\\d\\d\\d)");
+    ngx_str_t value = ngx_string(conf->regex_pattern.data);
 
     ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
 
@@ -182,12 +198,12 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
             do {
                 h1 = part1->elts;
                 for (i = 0; i < part1->nelts; i++) {
-                    if (ngx_strcmp(TOKEN_NAME, h1[i].key.data) == 0) {
+                    if (ngx_strcmp(conf->token_name.data, h1[i].key.data) == 0) {
                         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
                                       "header_inspect: version [%s] token found ->  %s",
                                       MODULE_VERSION, h1[i].value.data);
                         ngx_str_t input = ngx_string(h1[i].value.data);
-                        if (check_token_pattern(r, &input)!=0){
+                        if (check_token_pattern(conf, r, &input) != 0) {
                             return NGX_HTTP_BAD_REQUEST;
                         }
                         return NGX_DECLINED;
@@ -199,7 +215,7 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
     }
     ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1, "header_inspect: version[%s] token not found ",
                   MODULE_VERSION,
-                  TOKEN_NAME);
+                  conf->token_name.data);
     return NGX_HTTP_BAD_REQUEST;
 }
 
@@ -218,6 +234,8 @@ static void *ngx_header_inspect_create_conf(ngx_conf_t *cf) {
     conf->log_uninspected = NGX_CONF_UNSET;
 
     conf->range_max_byteranges = NGX_CONF_UNSET_UINT;
+    conf->token_name.data = NULL;
+    conf->regex_pattern.data = NULL;
 
     return conf;
 }
@@ -232,6 +250,7 @@ static char *ngx_header_inspect_merge_conf(ngx_conf_t *cf, void *parent, void *c
     ngx_conf_merge_off_value(conf->log_uninspected, prev->log_uninspected, 0);
 
     ngx_conf_merge_uint_value(conf->range_max_byteranges, prev->range_max_byteranges, 5);
-
+    ngx_conf_merge_str_value(conf->token_name, prev->token_name, "");
+    ngx_conf_merge_str_value(conf->regex_pattern, prev->regex_pattern, "");
     return NGX_CONF_OK;
 }
