@@ -1,0 +1,3 @@
+/home/khalegh/higer/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/khalegh/higer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/khalegh/higer/cmake-build-debug/CMakeFiles/higer.dir

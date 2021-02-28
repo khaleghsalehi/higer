@@ -1,0 +1,1 @@
+#define NGX_CONFIGURE ""
