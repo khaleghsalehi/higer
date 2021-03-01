@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.15)
 project(higer)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(objs)
 include_directories(src/core)
 include_directories(src/event)
 include_directories(src/http)
@@ -107,7 +108,14 @@ add_executable(higer
         man/nginx.8
         module/ngx_http_header_inspect/config
         module/ngx_http_header_inspect/ngx_http_header_inspect.c
-        module/ngx_http_header_inspect/README
+        objs/autoconf.err
+        objs/Makefile
+        objs/nginx
+        objs/nginx.8
+        objs/ngx_auto_config.h
+        objs/ngx_auto_headers.h
+        objs/ngx_http_header_inspect_module_modules.c
+        objs/ngx_modules.c
         src/core/nginx.c
         src/core/nginx.h
         src/core/ngx_array.c
@@ -420,9 +428,14 @@ add_executable(higer
         src/stream/ngx_stream_variables.h
         src/stream/ngx_stream_write_filter_module.c
         \r
+        build
+        build.sh
         CHANGES
         CHANGES.ru
+        CMakeLists.txt
         configure
+        higer.png
         LICENSE
+        Makefile
         README
         README.md)
