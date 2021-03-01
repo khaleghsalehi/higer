@@ -14,10 +14,10 @@ modules:
 	$(MAKE) -f objs/Makefile modules
 
 upgrade:
-	/home/khalegh/pep4444/sbin -t
+	/home/khalegh/1234/sbin -t
 
-	kill -USR2 `cat /home/khalegh/pep4444/logs/nginx.pid`
+	kill -USR2 `cat /home/khalegh/1234/logs/nginx.pid`
 	sleep 1
-	test -f /home/khalegh/pep4444/logs/nginx.pid.oldbin
+	test -f /home/khalegh/1234/logs/nginx.pid.oldbin
 
-	kill -QUIT `cat /home/khalegh/pep4444/logs/nginx.pid.oldbin`
+	kill -QUIT `cat /home/khalegh/1234/logs/nginx.pid.oldbin`

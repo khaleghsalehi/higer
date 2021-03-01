@@ -44,6 +44,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -79,7 +80,7 @@
       <recent name="D:\higer\module\nginx-hello-world-module" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle./home/khalegh/higer">
+  <component name="RunManager" selected="CMake Application.higer">
     <configuration name="higer" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="higer" TARGET_NAME="higer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="higer" RUN_TARGET_NAME="higer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -149,7 +150,8 @@
       <workItem from="1614496098605" duration="21356000" />
       <workItem from="1614519498389" duration="324000" />
       <workItem from="1614519836848" duration="3518000" />
-      <workItem from="1614617966975" duration="1510000" />
+      <workItem from="1614617966975" duration="6579000" />
+      <workItem from="1614629667088" duration="6628000" />
     </task>
     <servers />
   </component>
@@ -178,6 +180,20 @@
       <path value="$PROJECT_DIR$/module/nginx-hello-world-module" />
       <path value="$PROJECT_DIR$/module/ngx_http_header_inspect" />
     </ignored-roots>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="781" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1614705626929">
+      <screen x="77" y="27" width="1843" height="1053" />
+    </state>
+    <state x="781" y="310" width="424" height="484" key="FileChooserDialogImpl/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614705626929" />
+    <state x="654" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1614629833369">
+      <screen x="77" y="27" width="1843" height="1053" />
+    </state>
+    <state x="654" y="380" key="com.intellij.ide.util.TipDialog/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614629833369" />
+    <state x="645" y="150" width="707" height="804" key="find.popup" timestamp="1614637559650">
+      <screen x="77" y="27" width="1843" height="1053" />
+    </state>
+    <state x="645" y="150" width="707" height="804" key="find.popup/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614637559650" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

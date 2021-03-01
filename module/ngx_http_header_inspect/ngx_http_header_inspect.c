@@ -145,8 +145,8 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
     u_char errstr[NGX_MAX_CONF_ERRSTR];
     ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s", pattern->data);
 
-    //ngx_str_t value = ngx_string("(\\d\\d\\d\\d\\d\\d)");
     ngx_str_t value = ngx_string(conf->regex_pattern.data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex pattern string ==>  %d", value.data);
 
     ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
 
@@ -166,6 +166,7 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
     int captures[(1 + rc.captures) * 3];
 
     n = ngx_regex_exec(re, pattern, captures, (1 + rc.captures) * 3);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: n  regex result  %d", n);
     if (n >= 0) {
         /* string matches expression */
         ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token matched.");
@@ -179,7 +180,8 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
     } else {
         /* some error */
         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 0,
-                      ngx_regex_exec_n "header_inspect: Internal error,  matching failed: %i", n);
+                      ngx_regex_exec_n
+                              "header_inspect: Internal error,  matching failed: %i", n);
         return -1;
     }
 }
