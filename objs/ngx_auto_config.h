@@ -1,4 +1,4 @@
-#define NGX_CONFIGURE " --with-debug --prefix=/home/khalegh/1234 --sbin-path=/home/khalegh/1234/sbin --with-http_sub_module --with-http_ssl_module --with-compat --add-dynamic-module=module/ngx_http_header_inspect"
+#define NGX_CONFIGURE " --with-debug --prefix=/home/khalegh/123 --sbin-path=/home/khalegh/123/sbin --with-http_sub_module --with-http_ssl_module --with-compat --add-dynamic-module=module/ngx_http_header_inspect"
 
 #ifndef NGX_DEBUG
 #define NGX_DEBUG  1
@@ -6,7 +6,7 @@
 
 
 #ifndef NGX_COMPILER
-#define NGX_COMPILER  "gcc 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) "
+#define NGX_COMPILER  "gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04) "
 #endif
 
 
@@ -469,7 +469,7 @@
 
 
 #ifndef NGX_PREFIX
-#define NGX_PREFIX  "/home/khalegh/1234/"
+#define NGX_PREFIX  "/home/khalegh/123/"
 #endif
 
 
@@ -479,7 +479,7 @@
 
 
 #ifndef NGX_SBIN_PATH
-#define NGX_SBIN_PATH  "/home/khalegh/1234/sbin"
+#define NGX_SBIN_PATH  "/home/khalegh/123/sbin"
 #endif
 
 

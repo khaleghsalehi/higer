@@ -139,21 +139,22 @@ static ngx_int_t ngx_header_inspect_init(ngx_conf_t *cf) {
 
 static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, ngx_str_t *pattern) {
 
+
     ngx_regex_t *re;
     ngx_regex_compile_t rc;
 
-    u_char errstr[NGX_MAX_CONF_ERRSTR];
+    u_char err_str[NGX_MAX_CONF_ERRSTR];
     ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s", pattern->data);
 
     ngx_str_t value = ngx_string(conf->regex_pattern.data);
-    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex pattern string ==>  %d", value.data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex pattern string ==>  %s", value.data);
 
     ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
 
     rc.pattern = value;
     rc.pool = r->pool;
     rc.err.len = NGX_MAX_CONF_ERRSTR;
-    rc.err.data = errstr;
+    rc.err.data = err_str;
     /* rc.options are passed as is to pcre_compile() */
 
     if (ngx_regex_compile(&rc) != NGX_OK) {
@@ -161,6 +162,8 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
     }
 
     re = rc.regex;
+
+
 
     ngx_int_t n;
     int captures[(1 + rc.captures) * 3];
@@ -184,6 +187,7 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
                               "header_inspect: Internal error,  matching failed: %i", n);
         return -1;
     }
+
 }
 
 static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {

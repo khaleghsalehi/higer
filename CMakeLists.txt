@@ -428,7 +428,6 @@ add_executable(higer
         src/stream/ngx_stream_variables.h
         src/stream/ngx_stream_write_filter_module.c
         \r
-        build
         build.sh
         CHANGES
         CHANGES.ru

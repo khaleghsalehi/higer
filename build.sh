@@ -16,7 +16,8 @@ echo '
      https://innovera.ir
  '
 make clean
-read -p "Enter setup path: " SETUP_DIR
+#read -p "Enter setup path: " SETUP_DIR
+SETUP_DIR=/home/khalegh/123
 mkdir $SETUP_DIR
 mkdir $SETUP_DIR/sbin
 ./configure --with-debug --prefix=$SETUP_DIR \

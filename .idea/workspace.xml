@@ -25,7 +25,7 @@
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
     </configurations>
   </component>
   <component name="ChangeListManager">
@@ -81,9 +81,19 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.higer">
-    <configuration name="higer" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="higer" TARGET_NAME="higer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="higer" RUN_TARGET_NAME="higer">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="higer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="higer" TARGET_NAME="higer" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="higer" RUN_TARGET_NAME="higer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="/home/khalegh/higer" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -100,7 +110,9 @@
         </option>
         <option name="vmOptions" value="" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <list>
@@ -125,7 +137,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -166,13 +178,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -180,20 +191,6 @@
       <path value="$PROJECT_DIR$/module/nginx-hello-world-module" />
       <path value="$PROJECT_DIR$/module/ngx_http_header_inspect" />
     </ignored-roots>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="781" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1614705626929">
-      <screen x="77" y="27" width="1843" height="1053" />
-    </state>
-    <state x="781" y="310" width="424" height="484" key="FileChooserDialogImpl/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614705626929" />
-    <state x="654" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1614629833369">
-      <screen x="77" y="27" width="1843" height="1053" />
-    </state>
-    <state x="654" y="380" key="com.intellij.ide.util.TipDialog/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614629833369" />
-    <state x="645" y="150" width="707" height="804" key="find.popup" timestamp="1614637559650">
-      <screen x="77" y="27" width="1843" height="1053" />
-    </state>
-    <state x="645" y="150" width="707" height="804" key="find.popup/77.27.1843.1053/1920.88.1024.768@77.27.1843.1053" timestamp="1614637559650" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
