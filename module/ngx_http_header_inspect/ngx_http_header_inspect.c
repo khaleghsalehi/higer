@@ -11,7 +11,7 @@
 #include <ngx_array.h>
 #include <ngx_regex.h>
 
-#define MODULE_VERSION "0.2"
+#define MODULE_VERSION "0.3"
 
 typedef struct {
     ngx_flag_t inspect;
@@ -137,25 +137,29 @@ static ngx_int_t ngx_header_inspect_init(ngx_conf_t *cf) {
     return NGX_OK;
 }
 
-static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, ngx_str_t *pattern) {
+static ngx_uint_t
+check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, ngx_str_t *token_value) {
 
 
     ngx_regex_t *re;
     ngx_regex_compile_t rc;
 
     u_char err_str[NGX_MAX_CONF_ERRSTR];
-    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s", pattern->data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s via len %d",
+                  token_value->data,
+                  token_value->len);
 
-    ngx_str_t value = ngx_string(conf->regex_pattern.data);
-    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex pattern string ==>  %s", value.data);
+    // regex value
+    ngx_str_t regex_pattern_value = ngx_string(conf->regex_pattern.data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex token_value string ==>  %s",
+                  regex_pattern_value.data);
 
     ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
 
-    rc.pattern = value;
+    rc.pattern = regex_pattern_value;
     rc.pool = r->pool;
     rc.err.len = NGX_MAX_CONF_ERRSTR;
     rc.err.data = err_str;
-    /* rc.options are passed as is to pcre_compile() */
 
     if (ngx_regex_compile(&rc) != NGX_OK) {
         ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: %V", &rc.err);
@@ -164,27 +168,23 @@ static ngx_uint_t check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_h
     re = rc.regex;
 
 
-
     ngx_int_t n;
     int captures[(1 + rc.captures) * 3];
 
-    n = ngx_regex_exec(re, pattern, captures, (1 + rc.captures) * 3);
+    n = ngx_regex_exec(re, token_value, captures, (1 + rc.captures) * 3);
     ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: n  regex result  %d", n);
     if (n >= 0) {
-        /* string matches expression */
         ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token matched.");
         return 0;
 
     } else if (n == NGX_REGEX_NO_MATCHED) {
-        /* no match was found */
         ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0,
                       "header_inspect:  header_inspect: token not matched.");
         return 1;
     } else {
-        /* some error */
         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 0,
                       ngx_regex_exec_n
-                              "header_inspect: Internal error,  matching failed: %i", n);
+                      "header_inspect: Internal error,  matching failed: %i", n);
         return -1;
     }
 
@@ -206,10 +206,10 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                 for (i = 0; i < part1->nelts; i++) {
                     if (ngx_strcmp(conf->token_name.data, h1[i].key.data) == 0) {
                         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: version [%s] token found ->  %s",
-                                      MODULE_VERSION, h1[i].value.data);
-                        ngx_str_t input = ngx_string(h1[i].value.data);
-                        if (check_token_pattern(conf, r, &input) != 0) {
+                                      "header_inspect: version [%s] token found ->  %s len %d",
+                                      MODULE_VERSION, h1[i].value.data, h1[i].value.len);
+                        // token validation
+                        if (check_token_pattern(conf, r, &h1[i].value) != 0) {
                             return NGX_HTTP_BAD_REQUEST;
                         }
                         return NGX_DECLINED;
