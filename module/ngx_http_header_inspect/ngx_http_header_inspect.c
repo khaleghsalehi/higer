@@ -20,8 +20,9 @@ typedef struct {
     ngx_flag_t block;
     ngx_uint_t range_max_byteranges;
     ngx_str_t token_name;
+    ngx_str_t token_version_name;
     ngx_str_t regex_pattern;
-    ngx_uint_t token_version;
+    ngx_str_t token_version;
 } ngx_header_inspect_loc_conf_t;
 
 
@@ -93,9 +94,17 @@ static ngx_command_t ngx_header_inspect_commands[] = {
                 NULL
         },
         {
+                ngx_string("inspect_headers_version_name"),
+                NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
+                ngx_conf_set_str_slot,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_header_inspect_loc_conf_t, token_version_name),
+                NULL
+        },
+        {
                 ngx_string("inspect_headers_version"),
                 NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
-                ngx_conf_set_num_slot,
+                ngx_conf_set_str_slot,
                 NGX_HTTP_LOC_CONF_OFFSET,
                 offsetof(ngx_header_inspect_loc_conf_t, token_version),
                 NULL
@@ -196,7 +205,7 @@ check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, 
     } else {
         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 0,
                       ngx_regex_exec_n
-                      "header_inspect: Internal error,  matching failed: %i", n);
+                              "header_inspect: Internal error,  matching failed: %i", n);
         return -1;
     }
 
@@ -205,47 +214,62 @@ check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, 
 static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
     ngx_header_inspect_loc_conf_t *conf;
     ngx_uint_t i;
-
+    ngx_uint_t token_status;
+    ngx_uint_t version_status;
+    token_status = 1; // false
+    version_status = 1; // false
     conf = ngx_http_get_module_loc_conf(r, ngx_http_header_inspect_module);
-
     if (conf->inspect) {
-        if (conf->inspect) {
-            ngx_list_part_t *part1;
-            ngx_table_elt_t *h1;
-            part1 = &r->headers_in.headers.part;
-            do {
-                h1 = part1->elts;
-                for (i = 0; i < part1->nelts; i++) {
-                    if (ngx_strcmp("token_version", h1[i].key.data) == 0) {
-                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: token version [%s] found",
-                                      h1[i].value.data);
-
+        ngx_list_part_t *part1;
+        ngx_table_elt_t *h1;
+        part1 = &r->headers_in.headers.part;
+        do {
+            h1 = part1->elts;
+            // iterate headers and find token name
+            for (i = 0; i < part1->nelts; i++) {
+                if (ngx_strcmp(conf->token_name.data, h1[i].key.data) == 0) {
+                    ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                  "header_inspect: token found ->  %s len %d",
+                                  h1[i].value.data, h1[i].value.len);
+                    if (check_token_pattern(conf, r, &h1[i].value) == 0) {
+                        version_status = 0;
+                        break;
                     } else {
-                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: token version  not found, return bad request");
-                        return NGX_HTTP_BAD_REQUEST;
-                    }
-
-                    if (ngx_strcmp(conf->token_name.data, h1[i].key.data) == 0) {
-                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: version [%s] token found ->  %s len %d",
-                                      MODULE_VERSION, h1[i].value.data, h1[i].value.len);
-                        // token validation
-                        if (check_token_pattern(conf, r, &h1[i].value) != 0) {
-                            return NGX_HTTP_BAD_REQUEST;
-                        }
-                        return NGX_DECLINED;
+                        version_status = 1;
                     }
                 }
-                part1 = part1->next;
-            } while (part1 != NULL);
-        }
+            }
+            // iterate headers and find token valid version
+            for (i = 0; i < part1->nelts; i++) {
+                if (ngx_strcmp(conf->token_version_name.data, h1[i].key.data) == 0) {
+                    ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                  "header_inspect: token version [%s] found",
+                                  h1[i].value.data);
+                    if (ngx_atoi(h1[i].value.data, 8) >= ngx_atoi(conf->token_version.data, 8) ) {
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: token version  mathced with valid number");
+                        token_status = 0;
+                        break;
+                    } else {
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: token version  found but not matched with valid number");
+                        token_status = 1;
+                        break;
+                    }
+                } else {
+                    token_status = 1;
+                }
+            }
+            part1 = part1->next;
+        } while (part1 != NULL);
     }
-    ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1, "header_inspect: version[%s] token not found ",
-                  MODULE_VERSION,
-                  conf->token_name.data);
-    return NGX_HTTP_BAD_REQUEST;
+    ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                  "header_inspect: status of token =>>  %d  version =>>  %d",
+                  token_status, version_status);
+    if ((token_status) == 0 && (version_status == 0))
+        return NGX_DECLINED;
+    else
+        return NGX_HTTP_BAD_REQUEST;
 }
 
 
@@ -265,7 +289,8 @@ static void *ngx_header_inspect_create_conf(ngx_conf_t *cf) {
     conf->range_max_byteranges = NGX_CONF_UNSET_UINT;
     conf->token_name.data = NULL;
     conf->regex_pattern.data = NULL;
-    conf->token_version = NGX_CONF_UNSET_UINT;
+    conf->token_version.data = NULL;
+    conf->token_version_name.data = NULL;
     return conf;
 }
 
@@ -280,7 +305,8 @@ static char *ngx_header_inspect_merge_conf(ngx_conf_t *cf, void *parent, void *c
 
     ngx_conf_merge_uint_value(conf->range_max_byteranges, prev->range_max_byteranges, 5);
     ngx_conf_merge_str_value(conf->token_name, prev->token_name, "");
+    ngx_conf_merge_str_value(conf->token_version_name, prev->token_version_name, "");
     ngx_conf_merge_str_value(conf->regex_pattern, prev->regex_pattern, "");
-    ngx_conf_merge_uint_value(conf->token_version, prev->token_version, 0);
+    ngx_conf_merge_str_value(conf->token_version, prev->token_version, 0);
     return NGX_CONF_OK;
 }

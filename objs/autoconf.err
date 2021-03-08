@@ -44,8 +44,8 @@ checking for limits.h
 checking for sys/filio.h
 
 objs/autotest.c:3:10: fatal error: sys/filio.h: No such file or directory
-    3 | #include <sys/filio.h>
-      |          ^~~~~~~~~~~~~
+ #include <sys/filio.h>
+          ^~~~~~~~~~~~~
 compilation terminated.
 ----------
 
@@ -132,8 +132,8 @@ checking for poll()
 checking for /dev/poll
 
 objs/autotest.c:4:10: fatal error: sys/devpoll.h: No such file or directory
-    4 | #include <sys/devpoll.h>
-      |          ^~~~~~~~~~~~~~~
+ #include <sys/devpoll.h>
+          ^~~~~~~~~~~~~~~
 compilation terminated.
 ----------
 
@@ -160,8 +160,8 @@ cc -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -o objs/autotest objs/autotest.c
 checking for kqueue
 
 objs/autotest.c:4:10: fatal error: sys/event.h: No such file or directory
-    4 | #include <sys/event.h>
-      |          ^~~~~~~~~~~~~
+ #include <sys/event.h>
+          ^~~~~~~~~~~~~
 compilation terminated.
 ----------
 
@@ -181,8 +181,8 @@ cc -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -o objs/autotest objs/autotest.c
 ----------------------------------------
 checking for crypt()
 
-/usr/bin/ld: /tmp/cctmTZ2c.o: in function `main':
-autotest.c:(.text+0x17): undefined reference to `crypt'
+/tmp/cc4KhWlt.o: In function `main':
+autotest.c:(.text+0x13): undefined reference to `crypt'
 collect2: error: ld returned 1 exit status
 ----------
 
@@ -207,9 +207,10 @@ checking for crypt() in libcrypt
 checking for F_READAHEAD
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:7:14: error: 'F_READAHEAD' undeclared (first use in this function)
-    7 |     fcntl(0, F_READAHEAD, 1);;
-      |              ^~~~~~~~~~~
+objs/autotest.c:7:14: error: 'F_READAHEAD' undeclared (first use in this function); did you mean 'F_SEAL_SEAL'?
+     fcntl(0, F_READAHEAD, 1);;
+              ^~~~~~~~~~~
+              F_SEAL_SEAL
 objs/autotest.c:7:14: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -239,8 +240,8 @@ checking for F_NOCACHE
 
 objs/autotest.c: In function 'main':
 objs/autotest.c:7:14: error: 'F_NOCACHE' undeclared (first use in this function)
-    7 |     fcntl(0, F_NOCACHE, 1);;
-      |              ^~~~~~~~~
+     fcntl(0, F_NOCACHE, 1);;
+              ^~~~~~~~~
 objs/autotest.c:7:14: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -262,11 +263,11 @@ checking for directio()
 
 objs/autotest.c: In function 'main':
 objs/autotest.c:8:5: warning: implicit declaration of function 'directio' [-Wimplicit-function-declaration]
-    8 |     directio(0, DIRECTIO_ON);;
-      |     ^~~~~~~~
+     directio(0, DIRECTIO_ON);;
+     ^~~~~~~~
 objs/autotest.c:8:17: error: 'DIRECTIO_ON' undeclared (first use in this function)
-    8 |     directio(0, DIRECTIO_ON);;
-      |                 ^~~~~~~~~~~
+     directio(0, DIRECTIO_ON);;
+                 ^~~~~~~~~~~
 objs/autotest.c:8:17: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -295,9 +296,9 @@ checking for statvfs()
 ----------------------------------------
 checking for dlopen()
 
-/usr/bin/ld: /tmp/ccaJSV99.o: in function `main':
-autotest.c:(.text+0x13): undefined reference to `dlopen'
-/usr/bin/ld: autotest.c:(.text+0x24): undefined reference to `dlsym'
+/tmp/ccECRNnJ.o: In function `main':
+autotest.c:(.text+0xf): undefined reference to `dlopen'
+autotest.c:(.text+0x20): undefined reference to `dlsym'
 collect2: error: ld returned 1 exit status
 ----------
 
@@ -330,9 +331,10 @@ checking for sched_setaffinity()
 checking for SO_SETFIB
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:7:31: error: 'SO_SETFIB' undeclared (first use in this function)
-    7 |     setsockopt(0, SOL_SOCKET, SO_SETFIB, NULL, 0);
-      |                               ^~~~~~~~~
+objs/autotest.c:7:31: error: 'SO_SETFIB' undeclared (first use in this function); did you mean 'FD_SETSIZE'?
+     setsockopt(0, SOL_SOCKET, SO_SETFIB, NULL, 0);
+                               ^~~~~~~~~
+                               FD_SETSIZE
 objs/autotest.c:7:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -358,9 +360,9 @@ checking for SO_ACCEPTFILTER
 
 objs/autotest.c: In function 'main':
 objs/autotest.c:7:31: error: 'SO_ACCEPTFILTER' undeclared (first use in this function); did you mean 'SO_LOCK_FILTER'?
-    7 |     setsockopt(0, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0);
-      |                               ^~~~~~~~~~~~~~~
-      |                               SO_LOCK_FILTER
+     setsockopt(0, SOL_SOCKET, SO_ACCEPTFILTER, NULL, 0);
+                               ^~~~~~~~~~~~~~~
+                               SO_LOCK_FILTER
 objs/autotest.c:7:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -381,9 +383,10 @@ cc -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -o objs/autotest objs/autotest.c
 checking for SO_BINDANY
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:7:31: error: 'SO_BINDANY' undeclared (first use in this function)
-    7 |     setsockopt(0, SOL_SOCKET, SO_BINDANY, NULL, 0);
-      |                               ^~~~~~~~~~
+objs/autotest.c:7:31: error: 'SO_BINDANY' undeclared (first use in this function); did you mean 'SO_LINGER'?
+     setsockopt(0, SOL_SOCKET, SO_BINDANY, NULL, 0);
+                               ^~~~~~~~~~
+                               SO_LINGER
 objs/autotest.c:7:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -408,9 +411,10 @@ checking for IP_TRANSPARENT
 checking for IP_BINDANY
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:8:31: error: 'IP_BINDANY' undeclared (first use in this function)
-    8 |     setsockopt(0, IPPROTO_IP, IP_BINDANY, NULL, 0);
-      |                               ^~~~~~~~~~
+objs/autotest.c:8:31: error: 'IP_BINDANY' undeclared (first use in this function); did you mean 'IP_MINTTL'?
+     setsockopt(0, IPPROTO_IP, IP_BINDANY, NULL, 0);
+                               ^~~~~~~~~~
+                               IP_MINTTL
 objs/autotest.c:8:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -437,9 +441,9 @@ checking for IP_RECVDSTADDR
 
 objs/autotest.c: In function 'main':
 objs/autotest.c:8:31: error: 'IP_RECVDSTADDR' undeclared (first use in this function); did you mean 'IP_ORIGDSTADDR'?
-    8 |     setsockopt(0, IPPROTO_IP, IP_RECVDSTADDR, NULL, 0);
-      |                               ^~~~~~~~~~~~~~
-      |                               IP_ORIGDSTADDR
+     setsockopt(0, IPPROTO_IP, IP_RECVDSTADDR, NULL, 0);
+                               ^~~~~~~~~~~~~~
+                               IP_ORIGDSTADDR
 objs/autotest.c:8:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -461,9 +465,10 @@ cc -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -o objs/autotest objs/autotest.c
 checking for IP_SENDSRCADDR
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:8:31: error: 'IP_SENDSRCADDR' undeclared (first use in this function)
-    8 |     setsockopt(0, IPPROTO_IP, IP_SENDSRCADDR, NULL, 0);
-      |                               ^~~~~~~~~~~~~~
+objs/autotest.c:8:31: error: 'IP_SENDSRCADDR' undeclared (first use in this function); did you mean 'IP_ORIGDSTADDR'?
+     setsockopt(0, IPPROTO_IP, IP_SENDSRCADDR, NULL, 0);
+                               ^~~~~~~~~~~~~~
+                               IP_ORIGDSTADDR
 objs/autotest.c:8:31: note: each undeclared identifier is reported only once for each function it appears in
 ----------
 
@@ -589,11 +594,12 @@ checking for AF_INET6
 checking for setproctitle()
 
 objs/autotest.c: In function 'main':
-objs/autotest.c:7:5: warning: implicit declaration of function 'setproctitle' [-Wimplicit-function-declaration]
-    7 |     setproctitle("test");;
-      |     ^~~~~~~~~~~~
-/usr/bin/ld: /tmp/ccyUKbqk.o: in function `main':
-autotest.c:(.text+0x15): undefined reference to `setproctitle'
+objs/autotest.c:7:5: warning: implicit declaration of function 'setproctitle'; did you mean 'setstate'? [-Wimplicit-function-declaration]
+     setproctitle("test");;
+     ^~~~~~~~~~~~
+     setstate
+/tmp/ccOvoMjJ.o: In function `main':
+autotest.c:(.text+0x11): undefined reference to `setproctitle'
 collect2: error: ld returned 1 exit status
 ----------
 
@@ -625,8 +631,8 @@ checking for pwritev()
 ----------------------------------------
 checking for sys_nerr
 
-/usr/bin/ld: /tmp/ccCPZEyg.o: in function `main':
-autotest.c:(.text+0xa): warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
+/tmp/cc7tOYLY.o: In function `main':
+autotest.c:(.text+0x6): warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
 135
 ----------------------------------------
 checking for localtime_r()
@@ -659,9 +665,9 @@ checking for System V shared memory
 ----------------------------------------
 checking for POSIX semaphores
 
-/usr/bin/ld: /tmp/ccFrpr6K.o: in function `main':
-autotest.c:(.text+0x2d): undefined reference to `sem_init'
-/usr/bin/ld: autotest.c:(.text+0x45): undefined reference to `sem_destroy'
+/tmp/ccISaFnt.o: In function `main':
+autotest.c:(.text+0x29): undefined reference to `sem_init'
+autotest.c:(.text+0x41): undefined reference to `sem_destroy'
 collect2: error: ld returned 1 exit status
 ----------
 
@@ -705,13 +711,13 @@ checking for struct dirent.d_namlen
 
 objs/autotest.c: In function 'main':
 objs/autotest.c:8:29: error: 'struct dirent' has no member named 'd_namlen'; did you mean 'd_name'?
-    8 |     struct dirent  dir; dir.d_namlen = 0;
-      |                             ^~~~~~~~
-      |                             d_name
+     struct dirent  dir; dir.d_namlen = 0;
+                             ^~~~~~~~
+                             d_name
 objs/autotest.c:9:42: error: 'struct dirent' has no member named 'd_namlen'; did you mean 'd_name'?
-    9 |                   printf("%d", (int) dir.d_namlen);
-      |                                          ^~~~~~~~
-      |                                          d_name
+                   printf("%d", (int) dir.d_namlen);
+                                          ^~~~~~~~
+                                          d_name
 ----------
 
 #include <sys/types.h>

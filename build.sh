@@ -1,6 +1,9 @@
 #!/bin/bash
-#!/bin/bash
+echo "=========================="
+make clean
 clear
+sudo kill 9  `ps -aux | grep nginx | awk '{print $2}'`
+
 echo '
   _    _ _
  | |  | (_)
@@ -29,3 +32,5 @@ mkdir $SETUP_DIR/sbin
 make
 sudo make install
 sudo cp conf/nginx.conf $SETUP_DIR/conf/
+
+sudo /home/khalegh/123/sbin/nginx -c /home/khalegh/123/conf/nginx.conf
