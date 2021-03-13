@@ -1262,72 +1262,72 @@ objs/addon/ngx_http_header_inspect/ngx_http_header_inspect.o:	$(ADDON_DEPS) \
 manpage:	objs/nginx.8
 
 objs/nginx.8:	man/nginx.8 objs/ngx_auto_config.h
-	sed -e "s|%%PREFIX%%|/home/khalegh/123|" \
-		-e "s|%%PID_PATH%%|/home/khalegh/123/logs/nginx.pid|" \
-		-e "s|%%CONF_PATH%%|/home/khalegh/123/conf/nginx.conf|" \
-		-e "s|%%ERROR_LOG_PATH%%|/home/khalegh/123/logs/error.log|" \
+	sed -e "s|%%PREFIX%%|/home/khalegh/higer|" \
+		-e "s|%%PID_PATH%%|/home/khalegh/higer/logs/nginx.pid|" \
+		-e "s|%%CONF_PATH%%|/home/khalegh/higer/conf/nginx.conf|" \
+		-e "s|%%ERROR_LOG_PATH%%|/home/khalegh/higer/logs/error.log|" \
 		< man/nginx.8 > $@
 
 install:	build 
-	test -d '$(DESTDIR)/home/khalegh/123' || mkdir -p '$(DESTDIR)/home/khalegh/123'
+	test -d '$(DESTDIR)/home/khalegh/higer' || mkdir -p '$(DESTDIR)/home/khalegh/higer'
 
-	test -d '$(DESTDIR)/home/khalegh/123' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123'
-	test ! -f '$(DESTDIR)/home/khalegh/123/sbin' \
-		|| mv '$(DESTDIR)/home/khalegh/123/sbin' \
-			'$(DESTDIR)/home/khalegh/123/sbin.old'
-	cp objs/nginx '$(DESTDIR)/home/khalegh/123/sbin'
+	test -d '$(DESTDIR)/home/khalegh/higer' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer'
+	test ! -f '$(DESTDIR)/home/khalegh/higer/sbin' \
+		|| mv '$(DESTDIR)/home/khalegh/higer/sbin' \
+			'$(DESTDIR)/home/khalegh/higer/sbin.old'
+	cp objs/nginx '$(DESTDIR)/home/khalegh/higer/sbin'
 
-	test -d '$(DESTDIR)/home/khalegh/123/conf' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123/conf'
+	test -d '$(DESTDIR)/home/khalegh/higer/conf' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer/conf'
 
-	cp conf/koi-win '$(DESTDIR)/home/khalegh/123/conf'
-	cp conf/koi-utf '$(DESTDIR)/home/khalegh/123/conf'
-	cp conf/win-utf '$(DESTDIR)/home/khalegh/123/conf'
+	cp conf/koi-win '$(DESTDIR)/home/khalegh/higer/conf'
+	cp conf/koi-utf '$(DESTDIR)/home/khalegh/higer/conf'
+	cp conf/win-utf '$(DESTDIR)/home/khalegh/higer/conf'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/mime.types' \
-		|| cp conf/mime.types '$(DESTDIR)/home/khalegh/123/conf'
-	cp conf/mime.types '$(DESTDIR)/home/khalegh/123/conf/mime.types.default'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/mime.types' \
+		|| cp conf/mime.types '$(DESTDIR)/home/khalegh/higer/conf'
+	cp conf/mime.types '$(DESTDIR)/home/khalegh/higer/conf/mime.types.default'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/fastcgi_params' \
-		|| cp conf/fastcgi_params '$(DESTDIR)/home/khalegh/123/conf'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/fastcgi_params' \
+		|| cp conf/fastcgi_params '$(DESTDIR)/home/khalegh/higer/conf'
 	cp conf/fastcgi_params \
-		'$(DESTDIR)/home/khalegh/123/conf/fastcgi_params.default'
+		'$(DESTDIR)/home/khalegh/higer/conf/fastcgi_params.default'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/fastcgi.conf' \
-		|| cp conf/fastcgi.conf '$(DESTDIR)/home/khalegh/123/conf'
-	cp conf/fastcgi.conf '$(DESTDIR)/home/khalegh/123/conf/fastcgi.conf.default'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/fastcgi.conf' \
+		|| cp conf/fastcgi.conf '$(DESTDIR)/home/khalegh/higer/conf'
+	cp conf/fastcgi.conf '$(DESTDIR)/home/khalegh/higer/conf/fastcgi.conf.default'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/uwsgi_params' \
-		|| cp conf/uwsgi_params '$(DESTDIR)/home/khalegh/123/conf'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/uwsgi_params' \
+		|| cp conf/uwsgi_params '$(DESTDIR)/home/khalegh/higer/conf'
 	cp conf/uwsgi_params \
-		'$(DESTDIR)/home/khalegh/123/conf/uwsgi_params.default'
+		'$(DESTDIR)/home/khalegh/higer/conf/uwsgi_params.default'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/scgi_params' \
-		|| cp conf/scgi_params '$(DESTDIR)/home/khalegh/123/conf'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/scgi_params' \
+		|| cp conf/scgi_params '$(DESTDIR)/home/khalegh/higer/conf'
 	cp conf/scgi_params \
-		'$(DESTDIR)/home/khalegh/123/conf/scgi_params.default'
+		'$(DESTDIR)/home/khalegh/higer/conf/scgi_params.default'
 
-	test -f '$(DESTDIR)/home/khalegh/123/conf/nginx.conf' \
-		|| cp conf/nginx.conf '$(DESTDIR)/home/khalegh/123/conf/nginx.conf'
-	cp conf/nginx.conf '$(DESTDIR)/home/khalegh/123/conf/nginx.conf.default'
+	test -f '$(DESTDIR)/home/khalegh/higer/conf/nginx.conf' \
+		|| cp conf/nginx.conf '$(DESTDIR)/home/khalegh/higer/conf/nginx.conf'
+	cp conf/nginx.conf '$(DESTDIR)/home/khalegh/higer/conf/nginx.conf.default'
 
-	test -d '$(DESTDIR)/home/khalegh/123/logs' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123/logs'
+	test -d '$(DESTDIR)/home/khalegh/higer/logs' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer/logs'
 
-	test -d '$(DESTDIR)/home/khalegh/123/logs' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123/logs'
+	test -d '$(DESTDIR)/home/khalegh/higer/logs' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer/logs'
 
-	test -d '$(DESTDIR)/home/khalegh/123/html' \
-		|| cp -R html '$(DESTDIR)/home/khalegh/123'
+	test -d '$(DESTDIR)/home/khalegh/higer/html' \
+		|| cp -R html '$(DESTDIR)/home/khalegh/higer'
 
-	test -d '$(DESTDIR)/home/khalegh/123/logs' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123/logs'
+	test -d '$(DESTDIR)/home/khalegh/higer/logs' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer/logs'
 
-	test -d '$(DESTDIR)/home/khalegh/123/modules' \
-		|| mkdir -p '$(DESTDIR)/home/khalegh/123/modules'
+	test -d '$(DESTDIR)/home/khalegh/higer/modules' \
+		|| mkdir -p '$(DESTDIR)/home/khalegh/higer/modules'
 
-	test ! -f '$(DESTDIR)/home/khalegh/123/modules/ngx_http_header_inspect_module.so' \
-		|| mv '$(DESTDIR)/home/khalegh/123/modules/ngx_http_header_inspect_module.so' \
-			'$(DESTDIR)/home/khalegh/123/modules/ngx_http_header_inspect_module.so.old'
-	cp objs/ngx_http_header_inspect_module.so '$(DESTDIR)/home/khalegh/123/modules/ngx_http_header_inspect_module.so'
+	test ! -f '$(DESTDIR)/home/khalegh/higer/modules/ngx_http_header_inspect_module.so' \
+		|| mv '$(DESTDIR)/home/khalegh/higer/modules/ngx_http_header_inspect_module.so' \
+			'$(DESTDIR)/home/khalegh/higer/modules/ngx_http_header_inspect_module.so.old'
+	cp objs/ngx_http_header_inspect_module.so '$(DESTDIR)/home/khalegh/higer/modules/ngx_http_header_inspect_module.so'

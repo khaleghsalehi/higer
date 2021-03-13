@@ -1,4 +1,4 @@
-#define NGX_CONFIGURE " --with-debug --prefix=/home/khalegh/123 --sbin-path=/home/khalegh/123/sbin --with-http_sub_module --with-http_ssl_module --with-compat --add-dynamic-module=module/ngx_http_header_inspect"
+#define NGX_CONFIGURE " --with-debug --prefix=/home/khalegh/higer --sbin-path=/home/khalegh/higer/sbin --with-http_sub_module --with-http_ssl_module --with-compat --add-dynamic-module=module/ngx_http_header_inspect"
 
 #ifndef NGX_DEBUG
 #define NGX_DEBUG  1
@@ -469,7 +469,7 @@
 
 
 #ifndef NGX_PREFIX
-#define NGX_PREFIX  "/home/khalegh/123/"
+#define NGX_PREFIX  "/home/khalegh/higer/"
 #endif
 
 
@@ -479,7 +479,7 @@
 
 
 #ifndef NGX_SBIN_PATH
-#define NGX_SBIN_PATH  "/home/khalegh/123/sbin"
+#define NGX_SBIN_PATH  "/home/khalegh/higer/sbin"
 #endif
 
 

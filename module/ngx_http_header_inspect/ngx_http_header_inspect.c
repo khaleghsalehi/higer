@@ -36,6 +36,176 @@ static void *ngx_header_inspect_create_conf(ngx_conf_t *cf);
 static char *ngx_header_inspect_merge_conf(ngx_conf_t *cf, void *parent, void *child);
 
 
+
+/*
+ * Encryption
+ */
+
+
+#ifndef AES_H_
+#define AES_H_
+
+#include <stdlib.h>
+#include <string.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#include <openssl/err.h>
+
+#define AES_BLOCK_SIZE 16
+#define AES_KEY_SIZE 32
+
+typedef struct _AES_DATA {
+    unsigned char *key;
+    unsigned char *iv;
+} AES_DATA;
+
+typedef struct Message_Struct {
+    unsigned char *body;
+    int *length;
+    AES_DATA *aes_settings;
+
+} Message;
+
+Message *message_init(int);
+
+int aes256_init(Message *);
+
+Message *aes256_encrypt(Message *);
+
+Message *aes256_decrypt(Message *);
+
+void aes_cleanup(AES_DATA *);
+
+void message_cleanup(Message *);
+
+
+#endif
+
+Message *message_init(int length) {
+    Message *ret = malloc(sizeof(Message));
+    ret->body = malloc(length);
+    ret->length = malloc(sizeof(int));
+    *ret->length = length;
+    //used string terminator to allow string methods to work
+    memset(ret->body, '\0', length);
+    //initialize aes_data
+    aes256_init(ret);
+    return ret;
+}
+
+int aes256_init(Message *input) {
+    AES_DATA *aes_info = malloc(sizeof(AES_DATA));
+    aes_info->key = malloc(sizeof(char) * AES_KEY_SIZE);
+    aes_info->iv = malloc(sizeof(char) * AES_KEY_SIZE);
+    //point to new data
+    input->aes_settings = aes_info;
+    //set to zero
+    memset(input->aes_settings->key, 0, AES_KEY_SIZE);
+    memset(input->aes_settings->iv, 0, AES_KEY_SIZE);
+    //get rand bytes
+
+
+//    unsigned char aes_key[] = {0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65,
+//                               0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65,
+//                               0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65,
+//                               0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65};
+//
+//    unsigned char aes_iv[] = {0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65,
+//                              0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65, 0x65};
+    unsigned char aes_key[] = "khaleghkhalegh00";
+
+    unsigned char aes_iv[] = "0000000011111111";
+
+    memcpy(input->aes_settings->key, aes_key, sizeof(aes_key));
+    memcpy(input->aes_settings->iv, aes_iv, sizeof(aes_iv));
+    return 0;
+}
+
+Message *aes256_encrypt(Message *plaintext) {
+    EVP_CIPHER_CTX *enc_ctx;
+    Message *encrypted_message;
+    int enc_length = *(plaintext->length) + (AES_BLOCK_SIZE - *(plaintext->length) % AES_BLOCK_SIZE);
+
+    encrypted_message = message_init(enc_length);
+    //set up encryption context
+    enc_ctx = EVP_CIPHER_CTX_new();
+    EVP_EncryptInit(enc_ctx, EVP_aes_256_cbc(), plaintext->aes_settings->key, plaintext->aes_settings->iv);
+    //encrypt all the bytes up to but not including the last block
+    if (!EVP_EncryptUpdate(enc_ctx, encrypted_message->body, &enc_length, plaintext->body, *plaintext->length)) {
+        EVP_CIPHER_CTX_cleanup(enc_ctx);
+        printf("EVP Error: couldn't update encryption with plain text!\n");
+        return NULL;
+    }
+    //update length with the amount of bytes written
+    *(encrypted_message->length) = enc_length;
+    //EncryptFinal will cipher the last block + Padding
+    if (!EVP_EncryptFinal_ex(enc_ctx, enc_length + encrypted_message->body, &enc_length)) {
+        EVP_CIPHER_CTX_cleanup(enc_ctx);
+        printf("EVP Error: couldn't finalize encryption!\n");
+        return NULL;
+    }
+    //add padding to length
+    *(encrypted_message->length) += enc_length;
+    //no errors, copy over key & iv rather than pointing to the plaintext msg
+    memcpy(encrypted_message->aes_settings->key, plaintext->aes_settings->key, AES_KEY_SIZE);
+    memcpy(encrypted_message->aes_settings->iv, plaintext->aes_settings->iv, AES_KEY_SIZE);
+    //Free context and return encrypted message
+    EVP_CIPHER_CTX_cleanup(enc_ctx);
+    return encrypted_message;
+}
+
+Message *aes256_decrypt(Message *encrypted_message) {
+    EVP_CIPHER_CTX *dec_ctx;
+    int dec_length = 0;
+    Message *decrypted_message;
+    //initialize return message and cipher context
+    decrypted_message = message_init(*encrypted_message->length);
+    dec_ctx = EVP_CIPHER_CTX_new();
+    EVP_DecryptInit(dec_ctx, EVP_aes_256_cbc(), encrypted_message->aes_settings->key,
+                    encrypted_message->aes_settings->iv);
+    //same as above
+    if (!EVP_DecryptUpdate(dec_ctx, decrypted_message->body, &dec_length, encrypted_message->body,
+                           *encrypted_message->length)) {
+        EVP_CIPHER_CTX_cleanup(dec_ctx);
+        printf("EVP Error: couldn't update decrypt with text!\n");
+        return NULL;
+    }
+    *(decrypted_message->length) = dec_length;
+    if (!EVP_DecryptFinal_ex(dec_ctx, *decrypted_message->length + decrypted_message->body, &dec_length)) {
+        EVP_CIPHER_CTX_cleanup(dec_ctx);
+        printf("EVP Error: couldn't finalize decryption!\n");
+        return NULL;
+    }
+    //auto handle padding
+    *(decrypted_message->length) += dec_length;
+    //Terminate string for easier use.
+    *(decrypted_message->body + *decrypted_message->length) = '\0';
+    //no errors, copy over key & iv rather than pointing to the encrypted msg
+    memcpy(decrypted_message->aes_settings->key, encrypted_message->aes_settings->key, AES_KEY_SIZE);
+    memcpy(decrypted_message->aes_settings->iv, encrypted_message->aes_settings->iv, AES_KEY_SIZE);
+    //free context and return decrypted message
+    EVP_CIPHER_CTX_cleanup(dec_ctx);
+    return decrypted_message;
+}
+
+
+
+void aes_cleanup(AES_DATA *aes_data) {
+    free(aes_data->iv);
+    free(aes_data->key);
+    free(aes_data);
+}
+
+void message_cleanup(Message *message) {
+    //free message struct
+    aes_cleanup(message->aes_settings);
+    free(message->length);
+    free(message->body);
+    free(message);
+}
+
+
 static ngx_command_t ngx_header_inspect_commands[] = {
         {
                 ngx_string("inspect_headers"),
@@ -211,6 +381,7 @@ check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, 
 
 }
 
+
 static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
     ngx_header_inspect_loc_conf_t *conf;
     ngx_uint_t i;
@@ -232,6 +403,54 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                                   "header_inspect: token found ->  %s len %d",
                                   h1[i].value.data, h1[i].value.len);
                     if (check_token_pattern(conf, r, &h1[i].value) == 0) {
+                        ////////////////////////////////////////////////////////////////////
+
+                        // Initialize openSSL
+                        ERR_load_crypto_strings();
+                        OpenSSL_add_all_algorithms();
+
+
+                        Message *message, *enc_msg, *dec_msg;
+                        message = message_init(1024);
+                        strcpy((char *) message->body, (char *) h1[i].value.data);
+
+                        if (aes256_init(message)) {
+                            puts("Error: Couldn't initialize message with aes data!");
+                            return 1;
+                        }
+
+
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: Sending message to be encrypted... %s ", message->body);
+
+                        enc_msg = aes256_encrypt(message);
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: Encrypted Message: %s", enc_msg->body);
+
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: sending message to be decrypted...");
+
+                        dec_msg = aes256_decrypt(enc_msg);
+
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: Decrypted Message");
+
+                        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
+                                      "header_inspect: AES encryption body and len %s -> %s", dec_msg->body,
+                                      dec_msg->length);
+                        //destroy messages
+                        message_cleanup(message);
+                        message_cleanup(enc_msg);
+                        message_cleanup(dec_msg);
+                        //clean up ssl;
+                        EVP_cleanup();
+                        CRYPTO_cleanup_all_ex_data(); //Stop data leaks
+                        ERR_free_strings();
+
+
+
+
+                        ///////////////////////////////////////////////////////////////////
                         version_status = 0;
                         break;
                     } else {
@@ -245,9 +464,9 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                     ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
                                   "header_inspect: token version [%s] found",
                                   h1[i].value.data);
-                    if (ngx_atoi(h1[i].value.data, 8) >= ngx_atoi(conf->token_version.data, 8) ) {
+                    if (ngx_atoi(h1[i].value.data, 8) >= ngx_atoi(conf->token_version.data, 8)) {
                         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: token version  mathced with valid number");
+                                      "header_inspect: token version  matched with valid number");
                         token_status = 0;
                         break;
                     } else {
