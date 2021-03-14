@@ -20,8 +20,8 @@ echo '
  '
 make clean
 #read -p "Enter setup path: " SETUP_DIR
-sudo rm -R /home/khalegh/higer
-SETUP_DIR=/home/khalegh/higer
+sudo rm -R /home/khalegh/output1
+SETUP_DIR=/home/khalegh/output1
 mkdir $SETUP_DIR
 mkdir $SETUP_DIR/sbin
 ./configure --with-debug --prefix=$SETUP_DIR \
@@ -36,4 +36,4 @@ make
 sudo make install
 sudo cp conf/nginx.conf $SETUP_DIR/conf/
 
-sudo /home/khalegh/higer/sbin/nginx -c /home/khalegh/123/conf/nginx.conf
+sudo $SETUP_DIR/sbin/nginx -c $SETUP_DIR/conf/nginx.conf

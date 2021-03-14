@@ -20,8 +20,8 @@ echo '
  '
 make clean
 #read -p "Enter setup path: " SETUP_DIR
-sudo rm -R /home/khalegh/output
-SETUP_DIR=/home/khalegh/output
+sudo rm -R /home/khalegh/output1
+SETUP_DIR=/home/khalegh/output1
 mkdir $SETUP_DIR
 mkdir $SETUP_DIR/sbin
 ./configure --with-debug --prefix=$SETUP_DIR \
