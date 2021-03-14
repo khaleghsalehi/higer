@@ -826,61 +826,62 @@ static ngx_int_t ngx_header_inspect_init(ngx_conf_t *cf) {
     return NGX_OK;
 }
 
-//static ngx_uint_t
-//check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, char *token_value) {
-//
-//
-//    ngx_regex_t *re;
-//    ngx_regex_compile_t rc;
-//
-//    u_char err_str[NGX_MAX_CONF_ERRSTR];
-//    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s via len %d",
-//                  token_value,
-//                  strlen(token_value));
-//    // get version number
-//
-//    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token version  %d",
-//                  conf->token_version);
-//    // regex value
-//    ngx_str_t regex_pattern_value = ngx_string(conf->regex_pattern.data);
-//    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex token_value string ==>  %s",
-//                  regex_pattern_value.data);
-//
-//    ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
-//
-//    rc.pattern = regex_pattern_value;
-//    rc.pool = r->pool;
-//    rc.err.len = NGX_MAX_CONF_ERRSTR;
-//    rc.err.data = err_str;
-//
-//    if (ngx_regex_compile(&rc) != NGX_OK) {
-//        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: %V", &rc.err);
-//    }
-//
-//    re = rc.regex;
-//
-//
-//    ngx_int_t n;
-//    int captures[(1 + rc.captures) * 3];
-//
-//    n = ngx_regex_exec(re, (ngx_str_t *) token_value, captures, (1 + rc.captures) * 3);
-//    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: n  regex result  %d", n);
-//    if (n >= 0) {
-//        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token matched.");
-//        return 0;
-//
-//    } else if (n == NGX_REGEX_NO_MATCHED) {
-//        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0,
-//                      "header_inspect:  header_inspect: token not matched.");
-//        return 1;
-//    } else {
-//        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 0,
-//                      ngx_regex_exec_n
-//                              "header_inspect: Internal error,  matching failed: %i", n);
-//        return -1;
-//    }
-//
-//}
+static ngx_uint_t
+check_token_pattern(ngx_header_inspect_loc_conf_t *conf, ngx_http_request_t *r, char input[]) {
+
+
+    ngx_regex_t *re;
+    ngx_regex_compile_t rc;
+
+    u_char err_str[NGX_MAX_CONF_ERRSTR];
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: incoming string %s via len %d",
+                  input,
+                  strlen(input));
+    // get version number
+
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token version  %d",
+                  conf->token_version);
+    // regex value
+    ngx_str_t regex_pattern_value = ngx_string(conf->regex_pattern.data);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: regex token_value string ==>  %s",
+                  regex_pattern_value.data);
+
+    ngx_memzero(&rc, sizeof(ngx_regex_compile_t));
+
+    rc.pattern = regex_pattern_value;
+    rc.pool = r->pool;
+    rc.err.len = NGX_MAX_CONF_ERRSTR;
+    rc.err.data = err_str;
+
+    if (ngx_regex_compile(&rc) != NGX_OK) {
+        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: %V", &rc.err);
+    }
+
+    re = rc.regex;
+
+
+    ngx_int_t n;
+    int captures[(1 + rc.captures) * 3];
+
+    //n = ngx_regex_exec(re, input, captures, (1 + rc.captures) * 3);
+    n = pcre_exec(re->code, re->extra, (const char *) input, strlen(input), 0, 0, captures, (1 + rc.captures) * 3);
+    ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: n  regex result  %d", n);
+    if (n >= 0) {
+        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0, "header_inspect: token matched.");
+        return 0;
+
+    } else if (n == NGX_REGEX_NO_MATCHED) {
+        ngx_log_error(NGX_LOG_EMERG, r->connection->log, 0,
+                      "header_inspect:  header_inspect: token not matched.");
+        return 1;
+    } else {
+        ngx_log_error(NGX_LOG_ALERT, r->connection->log, 0,
+                      ngx_regex_exec_n
+                              "header_inspect: Internal error,  matching failed: %i", n);
+        return -1;
+    }
+
+}
 
 static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
     ngx_header_inspect_loc_conf_t *conf;
@@ -926,8 +927,8 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
 
                     AES_init_ctx_iv(&ctx, key, iv);
                     AES_CBC_decrypt_buffer(&ctx, byte_buffer, 32);
-                    char sign[23];
-                    for (i = 0; i < 23; ++i)
+                    char sign[32];
+                    for (i = 0; i < 31; ++i)
                         sprintf(&sign[i], "%c", byte_buffer[i]);
 
                     ngx_log_debug1(NGX_LOG_DEBUG_HTTP,
@@ -935,18 +936,16 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                                    0,
                                    "header_inspect: decryption token ==========>  %s",
                                    sign);
-                    //version_status = 0;
-                    //break;
                     // decryption finished.
-                    char pattern[] = "khaleghsalehi@gmail.com";
-                    if (strcmp(sign, pattern)==0) {
+
+                    if (check_token_pattern(conf, r, sign) == 0) {
                         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
                                       "header_inspect: token === success === matched.");
                         token_status = 0;
                         break;
                     } else {
                         ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
-                                      "header_inspect: token === not ==== matched. [%s] [%s] ", sign, pattern);
+                                      "header_inspect: token === not ==== matched. [%s]", sign);
                         token_status = 1;
                     }
                 }
