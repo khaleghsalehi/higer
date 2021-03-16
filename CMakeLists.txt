@@ -116,6 +116,24 @@ add_executable(higer
         objs/ngx_auto_headers.h
         objs/ngx_http_header_inspect_module_modules.c
         objs/ngx_modules.c
+        SETUP_DIR/conf/fastcgi.conf
+        SETUP_DIR/conf/fastcgi.conf.default
+        SETUP_DIR/conf/fastcgi_params
+        SETUP_DIR/conf/fastcgi_params.default
+        SETUP_DIR/conf/koi-utf
+        SETUP_DIR/conf/koi-win
+        SETUP_DIR/conf/mime.types
+        SETUP_DIR/conf/mime.types.default
+        SETUP_DIR/conf/nginx.conf
+        SETUP_DIR/conf/nginx.conf.default
+        SETUP_DIR/conf/scgi_params
+        SETUP_DIR/conf/scgi_params.default
+        SETUP_DIR/conf/uwsgi_params
+        SETUP_DIR/conf/uwsgi_params.default
+        SETUP_DIR/conf/win-utf
+        SETUP_DIR/html/50x.html
+        SETUP_DIR/html/index.html
+        SETUP_DIR/SETUP_DIR/sbin
         src/core/nginx.c
         src/core/nginx.h
         src/core/ngx_array.c
@@ -427,7 +445,7 @@ add_executable(higer
         src/stream/ngx_stream_variables.c
         src/stream/ngx_stream_variables.h
         src/stream/ngx_stream_write_filter_module.c
-        \r
+        build
         build.sh
         CHANGES
         CHANGES.ru

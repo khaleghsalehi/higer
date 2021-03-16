@@ -667,7 +667,11 @@ void AES_CTR_xcrypt_buffer(struct AES_ctx *ctx, uint8_t *buf, uint32_t length) {
  * ngx_http_header_inspect - Inspect HTTP headers
  *
  * Copyright (c) 2011, Andreas Jaggi <andreas.jaggi@waterwave.ch>
+ *
+ *
  * Copyright (c) 2021, Khalegh Salehi <khaleghsalehi@gmail.com>
+ *              Innovera Tehcnology
+ *             (https://innovera.ir)
  */
 
 #include <ngx_config.h>
@@ -688,6 +692,9 @@ typedef struct {
     ngx_str_t token_version_name;
     ngx_str_t regex_pattern;
     ngx_str_t token_version;
+    ngx_str_t aes_key;
+    ngx_str_t aes_iv;
+
 } ngx_header_inspect_loc_conf_t;
 
 
@@ -778,6 +785,22 @@ static ngx_command_t ngx_header_inspect_commands[] = {
                 ngx_conf_set_str_slot,
                 NGX_HTTP_LOC_CONF_OFFSET,
                 offsetof(ngx_header_inspect_loc_conf_t, token_version),
+                NULL
+        },
+        {
+                ngx_string("inspect_headers_aes_key"),
+                NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
+                ngx_conf_set_str_slot,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_header_inspect_loc_conf_t, aes_key),
+                NULL
+        },
+        {
+                ngx_string("inspect_headers_aes_iv"),
+                NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_TAKE1,
+                ngx_conf_set_str_slot,
+                NGX_HTTP_LOC_CONF_OFFSET,
+                offsetof(ngx_header_inspect_loc_conf_t, aes_iv),
                 NULL
         },
         ngx_null_command
@@ -909,10 +932,23 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
 
                     struct AES_ctx ctx;
 
-                    uint8_t key[] = "aaaaaaaaaaaaaaaa";
-                    uint8_t iv[] = "bbbbbbbbbbbbbbbb";
+                    unsigned char key[32];
+                    memset(key, 0x00, 32);
+                    ngx_sprintf(key, "%s",conf->aes_key.data);
+                    ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 1,
+                                   "header_inspect: AES key loaded from config ->  [%s] ",
+                                   key);
+
+                    unsigned char iv[16];
+                    memset(iv, 0x00, 16);
+                    ngx_sprintf(iv, "%s",conf->aes_iv.data);
+                    ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 1,
+                                   "header_inspect: AES iv loaded from config ->  [%s] ",
+                                   iv);
+
                     char token_value[64];
                     memset(token_value, 0x00, 64);
+
                     for (int j = 0; j <= 64; ++j) {
                         sprintf(&token_value[j], "%c", h1[i].value.data[j]);
                     }
@@ -925,10 +961,11 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                         pos += 2;
                     }
 
+
                     AES_init_ctx_iv(&ctx, key, iv);
                     AES_CBC_decrypt_buffer(&ctx, byte_buffer, 32);
                     char sign[32];
-                    for (i = 0; i < 31; ++i)
+                    for (i = 0; i < 32; ++i)
                         sprintf(&sign[i], "%c", byte_buffer[i]);
 
                     ngx_log_debug1(NGX_LOG_DEBUG_HTTP,
@@ -1002,6 +1039,9 @@ static void *ngx_header_inspect_create_conf(ngx_conf_t *cf) {
     conf->regex_pattern.data = NULL;
     conf->token_version.data = NULL;
     conf->token_version_name.data = NULL;
+
+    conf->aes_key.data = NULL;
+    conf->aes_iv.data = NULL;
     return conf;
 }
 
@@ -1019,5 +1059,8 @@ static char *ngx_header_inspect_merge_conf(ngx_conf_t *cf, void *parent, void *c
     ngx_conf_merge_str_value(conf->token_version_name, prev->token_version_name, "");
     ngx_conf_merge_str_value(conf->regex_pattern, prev->regex_pattern, "");
     ngx_conf_merge_str_value(conf->token_version, prev->token_version, 0);
+
+    ngx_conf_merge_str_value(conf->aes_key, prev->aes_key, 0);
+    ngx_conf_merge_str_value(conf->aes_iv, prev->aes_iv, 0);
     return NGX_CONF_OK;
 }

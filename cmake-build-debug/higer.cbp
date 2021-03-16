@@ -17,16 +17,6 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/home/khalegh/higer/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="rebuild_cache">
 				<Option working_dir="/home/khalegh/higer/cmake-build-debug"/>
 				<Option type="4"/>
@@ -101,10 +91,17 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/khalegh/higer/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/khalegh/higer/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 		</Build>
-		<Unit filename="/home/khalegh/higer/">
-			<Option target="higer"/>
-		</Unit>
 		<Unit filename="/home/khalegh/higer/CHANGES">
 			<Option target="higer"/>
 		</Unit>
@@ -124,6 +121,60 @@
 			<Option target="higer"/>
 		</Unit>
 		<Unit filename="/home/khalegh/higer/README.md">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/SETUP_DIR/sbin">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/fastcgi.conf">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/fastcgi.conf.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/fastcgi_params">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/fastcgi_params.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/koi-utf">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/koi-win">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/mime.types">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/mime.types.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/nginx.conf">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/nginx.conf.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/scgi_params">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/scgi_params.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/uwsgi_params">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/uwsgi_params.default">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/conf/win-utf">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/html/50x.html">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/SETUP_DIR/html/index.html">
 			<Option target="higer"/>
 		</Unit>
 		<Unit filename="/home/khalegh/higer/auto/cc/acc">
@@ -316,6 +367,9 @@
 			<Option target="higer"/>
 		</Unit>
 		<Unit filename="/home/khalegh/higer/auto/unix">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/build">
 			<Option target="higer"/>
 		</Unit>
 		<Unit filename="/home/khalegh/higer/build.sh">
