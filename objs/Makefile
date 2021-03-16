@@ -1237,10 +1237,12 @@ objs/src/http/modules/ngx_http_upstream_zone_module.o:	$(CORE_DEPS) $(HTTP_DEPS)
 modules:	objs/ngx_http_header_inspect_module.so
 
 objs/ngx_http_header_inspect_module.so:	objs/addon/ngx_http_header_inspect/ngx_http_header_inspect.o \
+	objs/addon/ngx_http_header_inspect/aes.o \
 	objs/ngx_http_header_inspect_module_modules.o
 
 	$(LINK) -o objs/ngx_http_header_inspect_module.so \
 	objs/addon/ngx_http_header_inspect/ngx_http_header_inspect.o \
+	objs/addon/ngx_http_header_inspect/aes.o \
 	objs/ngx_http_header_inspect_module_modules.o \
 	-shared
 
@@ -1257,6 +1259,13 @@ objs/addon/ngx_http_header_inspect/ngx_http_header_inspect.o:	$(ADDON_DEPS) \
 	$(CC) -c -fPIC $(CFLAGS) $(ALL_INCS) \
 		-o objs/addon/ngx_http_header_inspect/ngx_http_header_inspect.o \
 		module/ngx_http_header_inspect/ngx_http_header_inspect.c
+
+
+objs/addon/ngx_http_header_inspect/aes.o:	$(ADDON_DEPS) \
+	module/ngx_http_header_inspect/aes.c
+	$(CC) -c -fPIC $(CFLAGS) $(ALL_INCS) \
+		-o objs/addon/ngx_http_header_inspect/aes.o \
+		module/ngx_http_header_inspect/aes.c
 
 
 manpage:	objs/nginx.8

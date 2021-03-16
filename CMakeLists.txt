@@ -455,4 +455,4 @@ add_executable(higer
         LICENSE
         Makefile
         README
-        README.md)
+        README.md module/ngx_http_header_inspect/lib/aes.c module/ngx_http_header_inspect/lib/aes.h)

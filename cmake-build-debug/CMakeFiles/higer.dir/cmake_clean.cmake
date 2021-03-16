@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/higer.dir/module/ngx_http_header_inspect/lib/aes.c.o"
   "CMakeFiles/higer.dir/module/ngx_http_header_inspect/ngx_http_header_inspect.c.o"
   "CMakeFiles/higer.dir/objs/ngx_http_header_inspect_module_modules.c.o"
   "CMakeFiles/higer.dir/objs/ngx_modules.c.o"

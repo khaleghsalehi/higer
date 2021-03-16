@@ -465,6 +465,12 @@
 		<Unit filename="/home/khalegh/higer/module/ngx_http_header_inspect/config">
 			<Option target="higer"/>
 		</Unit>
+		<Unit filename="/home/khalegh/higer/module/ngx_http_header_inspect/lib/aes.c">
+			<Option target="higer"/>
+		</Unit>
+		<Unit filename="/home/khalegh/higer/module/ngx_http_header_inspect/lib/aes.h">
+			<Option target="higer"/>
+		</Unit>
 		<Unit filename="/home/khalegh/higer/module/ngx_http_header_inspect/ngx_http_header_inspect.c">
 			<Option target="higer"/>
 		</Unit>

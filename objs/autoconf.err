@@ -181,7 +181,7 @@ cc -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -o objs/autotest objs/autotest.c
 ----------------------------------------
 checking for crypt()
 
-/tmp/ccBX8KzC.o: In function `main':
+/tmp/ccTcYaJK.o: In function `main':
 autotest.c:(.text+0x13): undefined reference to `crypt'
 collect2: error: ld returned 1 exit status
 ----------
@@ -296,7 +296,7 @@ checking for statvfs()
 ----------------------------------------
 checking for dlopen()
 
-/tmp/ccYdyxc3.o: In function `main':
+/tmp/cchxLLh5.o: In function `main':
 autotest.c:(.text+0xf): undefined reference to `dlopen'
 autotest.c:(.text+0x20): undefined reference to `dlsym'
 collect2: error: ld returned 1 exit status
@@ -598,7 +598,7 @@ objs/autotest.c:7:5: warning: implicit declaration of function 'setproctitle'; d
      setproctitle("test");;
      ^~~~~~~~~~~~
      setstate
-/tmp/cc08uIG1.o: In function `main':
+/tmp/ccv6EXZa.o: In function `main':
 autotest.c:(.text+0x11): undefined reference to `setproctitle'
 collect2: error: ld returned 1 exit status
 ----------
@@ -631,7 +631,7 @@ checking for pwritev()
 ----------------------------------------
 checking for sys_nerr
 
-/tmp/ccJYynEh.o: In function `main':
+/tmp/ccZsnV9t.o: In function `main':
 autotest.c:(.text+0x6): warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
 135
 ----------------------------------------
@@ -665,7 +665,7 @@ checking for System V shared memory
 ----------------------------------------
 checking for POSIX semaphores
 
-/tmp/ccm1YnaM.o: In function `main':
+/tmp/ccNlHyE1.o: In function `main':
 autotest.c:(.text+0x29): undefined reference to `sem_init'
 autotest.c:(.text+0x41): undefined reference to `sem_destroy'
 collect2: error: ld returned 1 exit status

@@ -14,7 +14,7 @@ echo '
             __/ |
            |___/
            For Back-End Protection
-           Version 0.1
+           Version 0.4
  By: Innovera Technology
      https://innovera.ir
  '

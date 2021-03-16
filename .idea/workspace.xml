@@ -87,6 +87,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/module/ngx_http_header_inspect/lib" />
       <recent name="D:\higer\module\nginx-hello-world-module" />
     </key>
   </component>
@@ -162,7 +163,7 @@
       <workItem from="1614519836848" duration="3518000" />
       <workItem from="1614617966975" duration="6579000" />
       <workItem from="1614629667088" duration="6628000" />
-      <workItem from="1615876715302" duration="4670000" />
+      <workItem from="1615876715302" duration="6074000" />
     </task>
     <servers />
   </component>
