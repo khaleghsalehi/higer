@@ -323,7 +323,7 @@ static ngx_int_t ngx_header_inspect_process_request(ngx_http_request_t *r) {
                     }
                 }
             }
-            // iterate headers and find token valid version
+            // iterate headers and try to validate token's version
             for (i = 0; i < part1->nelts; i++) {
                 if (ngx_strcmp(conf->token_version_name.data, h1[i].key.data) == 0) {
                     ngx_log_error(NGX_LOG_ALERT, r->connection->log, 1,
